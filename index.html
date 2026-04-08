@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Source of Truth & AI | Zinc</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Brand Colors */
+            --zinc-fluoro: #2EEAA8;
+            --zinc-dark: #131313;
+            --zinc-black: #000000;
+            --zinc-tint: #FAF7F5;
+            --zinc-peach: #FCDCD2;
+            --zinc-rose: #DDA99C;
+            --zinc-terracotta: #C48272;
+            --zinc-dark-terracotta: #8B5D50;
+            --zinc-burgundy: #512D2D;
+            --zinc-action: #E84B8A;
+            --zinc-gray: #6C6C6C;
+            --zinc-light-gray: #E5E5E5;
+            --zinc-white: #FFFFFF;
+            --zinc-success: #27ae60;
+            --zinc-warning: #e67e22;
+            --zinc-error: #e74c3c;
+
+            /* Proportional spacing scale */
+            --space-xs: 0.5rem;
+            --space-sm: 0.75rem;
+            --space-md: 1rem;
+            --space-lg: 1.5rem;
+            --space-xl: 2rem;
+            --space-2xl: 3rem;
+        }
+
+        html {
+            font-size: clamp(14px, 2vmin, 24px);
+        }
+
+        body {
+            font-family: 'Maison Neue', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--zinc-tint);
+            color: var(--zinc-dark);
+            overflow: hidden;
+            margin: 0;
+        }
+
+        .presentation {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 5vh 5vw;
+            display: none;
+            flex-direction: column;
+            background: var(--zinc-tint);
+        }
+
+        .slide.with-flash {
+            background:
+                linear-gradient(135deg, transparent 40%, rgba(252,220,210,0.3) 40%, rgba(252,220,210,0.3) 60%, transparent 60%),
+                linear-gradient(135deg, transparent 50%, rgba(252,220,210,0.2) 50%, rgba(252,220,210,0.2) 70%, transparent 70%),
+                var(--zinc-tint);
+        }
+
+        .slide.active {
+            display: flex;
+        }
+
+        .slide-number {
+            position: absolute;
+            bottom: var(--space-lg);
+            right: var(--space-xl);
+            font-size: 0.875rem;
+            color: var(--zinc-gray);
+            font-family: 'Maison Neue Mono', monospace;
+            letter-spacing: 0.5px;
+        }
+
+        .logo {
+            position: absolute;
+            top: var(--space-lg);
+            left: var(--space-xl);
+        }
+
+        .logo img {
+            height: 2rem;
+            width: auto;
+        }
+
+        h1 {
+            font-size: clamp(2rem, 4vmin, 3.5rem);
+            font-weight: 700;
+            margin-bottom: var(--space-sm);
+            color: var(--zinc-dark);
+            letter-spacing: -0.02em;
+        }
+
+        h1 span {
+            color: var(--zinc-fluoro);
+        }
+
+        h2 {
+            font-size: clamp(1.5rem, 3vmin, 2.5rem);
+            font-weight: 600;
+            margin-bottom: var(--space-md);
+            color: var(--zinc-dark);
+            letter-spacing: -0.01em;
+        }
+
+        h2 span {
+            color: var(--zinc-fluoro);
+        }
+
+        h3 {
+            font-size: clamp(1.125rem, 2vmin, 1.5rem);
+            font-weight: 600;
+            margin-bottom: var(--space-sm);
+            color: var(--zinc-dark);
+        }
+
+        h4 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: var(--space-sm);
+            color: var(--zinc-dark);
+        }
+
+        p {
+            font-size: 1rem;
+            line-height: 1.5;
+            color: var(--zinc-gray);
+        }
+
+        .subtitle {
+            font-size: clamp(1.125rem, 2vmin, 1.5rem);
+            color: var(--zinc-gray);
+            margin-bottom: var(--space-lg);
+        }
+
+        .content-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-xl);
+            margin-top: var(--space-lg);
+            flex: 1;
+            max-height: 60vh;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-lg);
+            margin-top: var(--space-lg);
+            flex: 1;
+            max-height: 55vh;
+        }
+
+        .card {
+            background: var(--zinc-white);
+            border-radius: 0.75rem;
+            padding: var(--space-xl);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card h4 {
+            color: var(--zinc-dark);
+            margin-bottom: var(--space-md);
+            font-size: 1.125rem;
+        }
+
+        .card p {
+            font-size: 1rem;
+            color: var(--zinc-gray);
+            line-height: 1.5;
+        }
+
+        .card ul {
+            list-style: none;
+            padding: 0;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+        }
+
+        .card li {
+            padding: var(--space-sm) 0;
+            border-bottom: 1px solid var(--zinc-light-gray);
+            font-size: 1rem;
+            color: var(--zinc-gray);
+        }
+
+        .card li:last-child {
+            border-bottom: none;
+        }
+
+        .slide.center {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .nav-dots {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+        }
+
+        .nav-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--zinc-light-gray);
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .nav-dot.active {
+            background: var(--zinc-fluoro);
+        }
+
+        .highlight-box {
+            background: var(--zinc-white);
+            border-left: 5px solid var(--zinc-fluoro);
+            padding: var(--space-lg) var(--space-xl);
+            margin-top: var(--space-xl);
+            border-radius: 0 0.75rem 0.75rem 0;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        }
+
+        .highlight-box p {
+            font-size: 1.0625rem;
+            margin: 0;
+        }
+
+        .flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-md);
+            margin: var(--space-lg) 0;
+            flex-wrap: wrap;
+        }
+
+        .flow-step {
+            background: var(--zinc-white);
+            padding: var(--space-md) var(--space-lg);
+            border-radius: 0.75rem;
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--zinc-dark);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        }
+
+        .flow-step.foundation {
+            background: var(--zinc-fluoro);
+        }
+
+        .flow-step.ai {
+            background: linear-gradient(135deg, var(--zinc-fluoro) 0%, #1AD68C 100%);
+        }
+
+        .flow-step small {
+            display: block;
+            font-weight: 400;
+            font-size: 0.8125rem;
+            color: var(--zinc-gray);
+            margin-top: 0.375rem;
+        }
+
+        .flow-arrow {
+            color: var(--zinc-gray);
+            font-size: 1.25rem;
+            font-weight: bold;
+        }
+
+        /* Vision statement styling */
+        .vision-statement {
+            background: var(--zinc-white);
+            border-radius: 1rem;
+            padding: var(--space-2xl);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            text-align: center;
+            max-width: 80%;
+            margin: 0 auto;
+        }
+
+        .vision-statement h3 {
+            color: var(--zinc-fluoro);
+            font-size: clamp(1.25rem, 2.5vmin, 1.75rem);
+            margin-bottom: var(--space-md);
+        }
+
+        .vision-statement p {
+            font-size: clamp(1rem, 1.5vmin, 1.25rem);
+            line-height: 1.6;
+        }
+
+        /* AI cycle diagram */
+        .cycle-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-xl);
+            margin: var(--space-xl) 0;
+        }
+
+        .cycle-step {
+            background: var(--zinc-white);
+            border-radius: 1rem;
+            padding: var(--space-lg);
+            text-align: center;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            width: 180px;
+        }
+
+        .cycle-step .icon {
+            font-size: 2rem;
+            margin-bottom: var(--space-sm);
+        }
+
+        .cycle-step h4 {
+            font-size: 1rem;
+            margin-bottom: var(--space-xs);
+        }
+
+        .cycle-step p {
+            font-size: 0.875rem;
+        }
+
+        .cycle-arrow {
+            color: var(--zinc-fluoro);
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        /* Collab badge */
+        .collab-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-sm);
+            background: var(--zinc-peach);
+            color: var(--zinc-dark-terracotta);
+            padding: var(--space-sm) var(--space-md);
+            border-radius: 2rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-top: var(--space-md);
+        }
+
+        /* Problem/solution layout */
+        .problem-solution {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-xl);
+            margin-top: var(--space-lg);
+        }
+
+        .problem-card {
+            background: var(--zinc-white);
+            border-radius: 0.75rem;
+            padding: var(--space-xl);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            border-top: 4px solid var(--zinc-terracotta);
+        }
+
+        .solution-card {
+            background: var(--zinc-white);
+            border-radius: 0.75rem;
+            padding: var(--space-xl);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            border-top: 4px solid var(--zinc-fluoro);
+        }
+
+        .problem-card h4, .solution-card h4 {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .problem-card h4 {
+            color: var(--zinc-terracotta);
+        }
+
+        .solution-card h4 {
+            color: var(--zinc-dark);
+        }
+
+        /* Key point */
+        .key-point {
+            background: linear-gradient(135deg, var(--zinc-fluoro) 0%, #1AD68C 100%);
+            border-radius: 0.75rem;
+            padding: var(--space-lg) var(--space-xl);
+            margin-top: var(--space-lg);
+            text-align: center;
+        }
+
+        .key-point p {
+            color: var(--zinc-dark);
+            font-weight: 600;
+            font-size: 1.125rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation">
+        <!-- SLIDE 1: Title + The Problem -->
+        <div class="slide active center with-flash">
+            <h1>Building a <span>Source of Truth</span></h1>
+            <p class="subtitle">How clean data unlocks AI-powered sales</p>
+            <div class="collab-badge">Core Ops + GTM Engineering</div>
+            <div class="logo">
+                <img src="zinclogo.png" alt="Zinc">
+            </div>
+            <div class="slide-number">1 / 3</div>
+        </div>
+
+        <!-- SLIDE 2: Why Source of Truth Matters -->
+        <div class="slide with-flash">
+            <h2>Why <span>Source of Truth</span> Matters</h2>
+            <div class="content-area">
+                <p class="subtitle" style="margin-bottom: var(--space-lg);">Clean data is the foundation. Without it, nothing else works.</p>
+
+                <div class="problem-solution">
+                    <div class="problem-card">
+                        <h4>The Problem Today</h4>
+                        <ul style="list-style: none; padding: 0; margin-top: var(--space-md);">
+                            <li style="padding: var(--space-sm) 0; color: var(--zinc-gray);">Multiple systems with different data</li>
+                            <li style="padding: var(--space-sm) 0; color: var(--zinc-gray);">Duplicate contacts and companies</li>
+                            <li style="padding: var(--space-sm) 0; color: var(--zinc-gray);">SDRs waste time on stale leads</li>
+                            <li style="padding: var(--space-sm) 0; color: var(--zinc-gray);">Manual account allocation</li>
+                        </ul>
+                    </div>
+                    <div class="solution-card">
+                        <h4>What Clean Data Enables</h4>
+                        <ul style="list-style: none; padding: 0; margin-top: var(--space-md);">
+                            <li style="padding: var(--space-sm) 0; color: var(--zinc-gray);">Automated lead routing</li>
+                            <li style="padding: var(--space-sm) 0; color: var(--zinc-gray);">Reliable scoring and prioritisation</li>
+                            <li style="padding: var(--space-sm) 0; color: var(--zinc-gray);">AI that can actually help</li>
+                            <li style="padding: var(--space-sm) 0; color: var(--zinc-gray);">SDRs focused on conversations</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="key-point">
+                    <p>You can't automate or use AI on data you can't trust.</p>
+                </div>
+            </div>
+            <div class="slide-number">2 / 3</div>
+        </div>
+
+        <!-- SLIDE 3: How AI Fits In -->
+        <div class="slide with-flash">
+            <h2>How <span>AI</span> Fits In</h2>
+            <div class="content-area">
+                <p class="subtitle" style="margin-bottom: var(--space-md);">Deduplication requires human judgment. AI learns from those decisions.</p>
+
+                <div class="cycle-container">
+                    <div class="cycle-step">
+                        <div class="icon">👤</div>
+                        <h4>Human Reviews</h4>
+                        <p>Experts decide which records to merge</p>
+                    </div>
+                    <div class="cycle-arrow">→</div>
+                    <div class="cycle-step">
+                        <div class="icon">🧠</div>
+                        <h4>AI Learns</h4>
+                        <p>Patterns captured from decisions</p>
+                    </div>
+                    <div class="cycle-arrow">→</div>
+                    <div class="cycle-step">
+                        <div class="icon">⚡</div>
+                        <h4>AI Suggests</h4>
+                        <p>Faster, smarter recommendations</p>
+                    </div>
+                    <div class="cycle-arrow">→</div>
+                    <div class="cycle-step">
+                        <div class="icon">✓</div>
+                        <h4>Human Confirms</h4>
+                        <p>Quality stays high</p>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <p><strong>The goal:</strong> A system that gets smarter over time while keeping humans in control. Not replacing judgment — amplifying it.</p>
+                </div>
+
+                <div style="text-align: center; margin-top: var(--space-lg);">
+                    <div class="collab-badge">Building this together: Core Ops + GTM Engineering</div>
+                </div>
+            </div>
+            <div class="slide-number">3 / 3</div>
+        </div>
+
+        <!-- Navigation dots -->
+        <div class="nav-dots">
+            <div class="nav-dot active" data-slide="0"></div>
+            <div class="nav-dot" data-slide="1"></div>
+            <div class="nav-dot" data-slide="2"></div>
+        </div>
+    </div>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        const dots = document.querySelectorAll('.nav-dot');
+        let currentSlide = 0;
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            dots[currentSlide].classList.remove('active');
+            currentSlide = (n + slides.length) % slides.length;
+            slides[currentSlide].classList.add('active');
+            dots[currentSlide].classList.add('active');
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                showSlide(currentSlide + 1);
+            }
+            if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                showSlide(currentSlide - 1);
+            }
+        });
+
+        dots.forEach(dot => {
+            dot.addEventListener('click', () => {
+                showSlide(parseInt(dot.dataset.slide));
+            });
+        });
+
+        // Touch support
+        let touchStartX = 0;
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+        document.addEventListener('touchend', (e) => {
+            const touchEndX = e.changedTouches[0].screenX;
+            if (touchStartX - touchEndX > 50) showSlide(currentSlide + 1);
+            if (touchEndX - touchStartX > 50) showSlide(currentSlide - 1);
+        });
+    </script>
+</body>
+</html>
