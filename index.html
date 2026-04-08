@@ -555,6 +555,142 @@
             color: var(--zinc-warning);
             margin: var(--space-sm) 0;
         }
+
+        /* Risk threshold visual */
+        .threshold-container {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+            margin: var(--space-lg) 0;
+        }
+
+        .threshold-row {
+            display: grid;
+            grid-template-columns: 140px 1fr 180px;
+            align-items: center;
+            gap: var(--space-lg);
+            background: var(--zinc-white);
+            border-radius: 0.75rem;
+            padding: var(--space-md) var(--space-lg);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        }
+
+        .threshold-level {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .threshold-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .threshold-indicator.high {
+            background: var(--zinc-success);
+        }
+
+        .threshold-indicator.medium {
+            background: var(--zinc-warning);
+        }
+
+        .threshold-indicator.low {
+            background: var(--zinc-error);
+        }
+
+        .threshold-label {
+            font-weight: 600;
+            font-size: 0.9375rem;
+            color: var(--zinc-dark);
+        }
+
+        .threshold-bar {
+            height: 8px;
+            background: var(--zinc-light-gray);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .threshold-bar .fill {
+            height: 100%;
+            border-radius: 4px;
+        }
+
+        .threshold-bar .fill.high {
+            width: 95%;
+            background: linear-gradient(90deg, var(--zinc-success) 0%, #2ecc71 100%);
+        }
+
+        .threshold-bar .fill.medium {
+            width: 70%;
+            background: linear-gradient(90deg, var(--zinc-warning) 0%, #f39c12 100%);
+        }
+
+        .threshold-bar .fill.low {
+            width: 40%;
+            background: linear-gradient(90deg, var(--zinc-error) 0%, #c0392b 100%);
+        }
+
+        .threshold-action {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            font-size: 0.875rem;
+            color: var(--zinc-gray);
+        }
+
+        .threshold-action .action-icon {
+            font-size: 1.25rem;
+        }
+
+        .threshold-action .action-text {
+            font-weight: 500;
+        }
+
+        .threshold-action.auto .action-text {
+            color: var(--zinc-success);
+        }
+
+        .threshold-action.review .action-text {
+            color: var(--zinc-warning);
+        }
+
+        .threshold-action.flag .action-text {
+            color: var(--zinc-error);
+        }
+
+        /* Why it matters grid */
+        .why-matters {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-lg);
+            margin-top: var(--space-lg);
+        }
+
+        .matter-card {
+            background: var(--zinc-white);
+            border-radius: 0.75rem;
+            padding: var(--space-lg);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-md);
+        }
+
+        .matter-card .matter-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .matter-card h4 {
+            font-size: 1rem;
+            margin-bottom: var(--space-xs);
+        }
+
+        .matter-card p {
+            font-size: 0.875rem;
+        }
     </style>
 </head>
 <body>
@@ -567,7 +703,7 @@
             <div class="logo">
                 <img src="zinclogo.png" alt="Zinc">
             </div>
-            <div class="slide-number">1 / 4</div>
+            <div class="slide-number">1 / 5</div>
         </div>
 
         <!-- SLIDE 2: Why Source of Truth Matters -->
@@ -601,7 +737,7 @@
                     <p>You can't automate or use AI on data you can't trust.</p>
                 </div>
             </div>
-            <div class="slide-number">2 / 4</div>
+            <div class="slide-number">2 / 5</div>
         </div>
 
         <!-- SLIDE 3: Why Simple Rules Don't Work -->
@@ -654,10 +790,82 @@
                     </div>
                 </div>
             </div>
-            <div class="slide-number">3 / 4</div>
+            <div class="slide-number">3 / 5</div>
         </div>
 
-        <!-- SLIDE 4: How AI Fits In -->
+        <!-- SLIDE 4: Risk Thresholds -->
+        <div class="slide with-flash">
+            <h2><span>Risk Thresholds</span> & Human Review</h2>
+            <div class="content-area">
+                <p class="subtitle" style="margin-bottom: var(--space-md);">Not every match needs a human. But risky ones do.</p>
+
+                <div class="threshold-container">
+                    <div class="threshold-row">
+                        <div class="threshold-level">
+                            <div class="threshold-indicator high"></div>
+                            <span class="threshold-label">High Confidence</span>
+                        </div>
+                        <div class="threshold-bar">
+                            <div class="fill high"></div>
+                        </div>
+                        <div class="threshold-action auto">
+                            <span class="action-icon">⚡</span>
+                            <span class="action-text">Auto-merge</span>
+                        </div>
+                    </div>
+                    <div class="threshold-row">
+                        <div class="threshold-level">
+                            <div class="threshold-indicator medium"></div>
+                            <span class="threshold-label">Medium Confidence</span>
+                        </div>
+                        <div class="threshold-bar">
+                            <div class="fill medium"></div>
+                        </div>
+                        <div class="threshold-action review">
+                            <span class="action-icon">👤</span>
+                            <span class="action-text">Human reviews</span>
+                        </div>
+                    </div>
+                    <div class="threshold-row">
+                        <div class="threshold-level">
+                            <div class="threshold-indicator low"></div>
+                            <span class="threshold-label">Low Confidence</span>
+                        </div>
+                        <div class="threshold-bar">
+                            <div class="fill low"></div>
+                        </div>
+                        <div class="threshold-action flag">
+                            <span class="action-icon">🚩</span>
+                            <span class="action-text">Flag for investigation</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="why-matters">
+                    <div class="matter-card">
+                        <span class="matter-icon">🚀</span>
+                        <div>
+                            <h4>Speed where it's safe</h4>
+                            <p>Obvious duplicates merge automatically — no bottleneck on easy cases</p>
+                        </div>
+                    </div>
+                    <div class="matter-card">
+                        <span class="matter-icon">🛡️</span>
+                        <div>
+                            <h4>Safety where it matters</h4>
+                            <p>Tricky cases get human judgment — no bad merges breaking data</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="highlight-box" style="margin-top: var(--space-lg);">
+                    <p><strong>The threshold is tuneable.</strong> Start cautious (more human review), then raise automation as confidence grows.</p>
+                </div>
+            </div>
+            <div class="slide-number">4 / 5</div>
+        </div>
+
+        <!-- SLIDE 5: How AI Fits In -->
         <div class="slide with-flash">
             <h2>How <span>AI</span> Fits In</h2>
             <div class="content-area">
@@ -697,7 +905,7 @@
                     <div class="collab-badge">Building this together: Core Ops + GTM Engineering</div>
                 </div>
             </div>
-            <div class="slide-number">4 / 4</div>
+            <div class="slide-number">5 / 5</div>
         </div>
 
         <!-- Navigation dots -->
@@ -706,6 +914,7 @@
             <div class="nav-dot" data-slide="1"></div>
             <div class="nav-dot" data-slide="2"></div>
             <div class="nav-dot" data-slide="3"></div>
+            <div class="nav-dot" data-slide="4"></div>
         </div>
     </div>
 
