@@ -427,11 +427,139 @@
             font-weight: 600;
             font-size: 1.125rem;
         }
+
+        /* CRM Record Cards for visual example */
+        .record-example {
+            display: flex;
+            gap: var(--space-md);
+            justify-content: center;
+            margin: var(--space-lg) 0;
+        }
+
+        .crm-record {
+            background: var(--zinc-white);
+            border-radius: 0.75rem;
+            padding: var(--space-lg);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            width: 200px;
+            border: 2px solid var(--zinc-light-gray);
+        }
+
+        .crm-record.highlight {
+            border-color: var(--zinc-warning);
+        }
+
+        .crm-record .record-label {
+            font-family: 'Maison Neue Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--zinc-gray);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: var(--space-sm);
+        }
+
+        .crm-record .company-name {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--zinc-dark);
+            margin-bottom: var(--space-xs);
+        }
+
+        .crm-record .record-detail {
+            font-size: 0.8125rem;
+            color: var(--zinc-gray);
+            margin-bottom: var(--space-xs);
+        }
+
+        .crm-record .record-detail span {
+            color: var(--zinc-dark);
+        }
+
+        /* Comparison layout */
+        .comparison-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-2xl);
+            margin-top: var(--space-lg);
+        }
+
+        .comparison-side {
+            text-align: center;
+        }
+
+        .comparison-side h3 {
+            margin-bottom: var(--space-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+        }
+
+        .comparison-side h3.fail {
+            color: var(--zinc-terracotta);
+        }
+
+        .comparison-side h3.success {
+            color: var(--zinc-dark);
+        }
+
+        .comparison-side .verdict {
+            margin-top: var(--space-md);
+            padding: var(--space-sm) var(--space-md);
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-size: 0.875rem;
+            display: inline-block;
+        }
+
+        .comparison-side .verdict.wrong {
+            background: rgba(200, 130, 114, 0.15);
+            color: var(--zinc-terracotta);
+        }
+
+        .comparison-side .verdict.right {
+            background: rgba(46, 234, 168, 0.15);
+            color: #1a9d6c;
+        }
+
+        /* Reasoning box */
+        .reasoning-box {
+            background: var(--zinc-white);
+            border-radius: 0.75rem;
+            padding: var(--space-md);
+            margin-top: var(--space-md);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            text-align: left;
+        }
+
+        .reasoning-box .reasoning-label {
+            font-family: 'Maison Neue Mono', monospace;
+            font-size: 0.6875rem;
+            color: var(--zinc-fluoro);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: var(--space-xs);
+        }
+
+        .reasoning-box p {
+            font-size: 0.8125rem;
+            line-height: 1.4;
+        }
+
+        /* Question mark overlay */
+        .question-overlay {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--zinc-warning);
+            margin: var(--space-sm) 0;
+        }
     </style>
 </head>
 <body>
     <div class="presentation">
-        <!-- SLIDE 1: Title + The Problem -->
+        <!-- SLIDE 1: Title -->
         <div class="slide active center with-flash">
             <h1>Building a <span>Source of Truth</span></h1>
             <p class="subtitle">How clean data unlocks AI-powered sales</p>
@@ -439,7 +567,7 @@
             <div class="logo">
                 <img src="zinclogo.png" alt="Zinc">
             </div>
-            <div class="slide-number">1 / 3</div>
+            <div class="slide-number">1 / 4</div>
         </div>
 
         <!-- SLIDE 2: Why Source of Truth Matters -->
@@ -473,10 +601,63 @@
                     <p>You can't automate or use AI on data you can't trust.</p>
                 </div>
             </div>
-            <div class="slide-number">2 / 3</div>
+            <div class="slide-number">2 / 4</div>
         </div>
 
-        <!-- SLIDE 3: How AI Fits In -->
+        <!-- SLIDE 3: Why Simple Rules Don't Work -->
+        <div class="slide with-flash">
+            <h2>Why Simple <span>Rules</span> Don't Work</h2>
+            <div class="content-area">
+                <p class="subtitle" style="margin-bottom: var(--space-md);">Matching on email or name sounds easy. Reality is messier.</p>
+
+                <div class="record-example">
+                    <div class="crm-record highlight">
+                        <div class="record-label">Record A</div>
+                        <div class="company-name">Acme Inc</div>
+                        <div class="record-detail">Domain: <span>acme.com</span></div>
+                        <div class="record-detail">HQ: <span>London</span></div>
+                        <div class="record-detail">Employees: <span>500</span></div>
+                    </div>
+                    <div class="crm-record highlight">
+                        <div class="record-label">Record B</div>
+                        <div class="company-name">Acme Corporation</div>
+                        <div class="record-detail">Domain: <span>acme.com</span></div>
+                        <div class="record-detail">HQ: <span>New York</span></div>
+                        <div class="record-detail">Employees: <span>2,000</span></div>
+                    </div>
+                    <div class="crm-record highlight">
+                        <div class="record-label">Record C</div>
+                        <div class="company-name">Acme Digital</div>
+                        <div class="record-detail">Domain: <span>acmedigital.io</span></div>
+                        <div class="record-detail">HQ: <span>London</span></div>
+                        <div class="record-detail">Employees: <span>50</span></div>
+                    </div>
+                </div>
+
+                <div class="question-overlay">Are these duplicates? Which should merge?</div>
+
+                <div class="comparison-layout">
+                    <div class="comparison-side">
+                        <h3 class="fail">Simple Rules</h3>
+                        <p style="font-size: 0.875rem; color: var(--zinc-gray);">"Domain matches → merge"</p>
+                        <p style="font-size: 0.875rem; color: var(--zinc-gray); margin-top: var(--space-xs);">Merges A + B (wrong — different subsidiaries)</p>
+                        <p style="font-size: 0.875rem; color: var(--zinc-gray); margin-top: var(--space-xs);">Keeps C separate (wrong — same org)</p>
+                        <div class="verdict wrong">Breaks data, loses deals</div>
+                    </div>
+                    <div class="comparison-side">
+                        <h3 class="success">AI + Context</h3>
+                        <div class="reasoning-box">
+                            <div class="reasoning-label">AI Reasoning</div>
+                            <p>"A is UK subsidiary of B (parent). C is a spin-off brand, same ownership. Keep A+B separate for territory targeting. Link C to group for hierarchy."</p>
+                        </div>
+                        <div class="verdict right">Right answer, with explanation</div>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">3 / 4</div>
+        </div>
+
+        <!-- SLIDE 4: How AI Fits In -->
         <div class="slide with-flash">
             <h2>How <span>AI</span> Fits In</h2>
             <div class="content-area">
@@ -516,7 +697,7 @@
                     <div class="collab-badge">Building this together: Core Ops + GTM Engineering</div>
                 </div>
             </div>
-            <div class="slide-number">3 / 3</div>
+            <div class="slide-number">4 / 4</div>
         </div>
 
         <!-- Navigation dots -->
@@ -524,6 +705,7 @@
             <div class="nav-dot active" data-slide="0"></div>
             <div class="nav-dot" data-slide="1"></div>
             <div class="nav-dot" data-slide="2"></div>
+            <div class="nav-dot" data-slide="3"></div>
         </div>
     </div>
 
